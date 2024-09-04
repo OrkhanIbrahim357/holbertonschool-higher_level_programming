@@ -1,4 +1,4 @@
 #!/usr/bin/python3
 str = "Holberton School"
 print(f"{str *3} ")
-print(f"Holberton")
+print(f"{str[:9]}")
