@@ -1,3 +1,9 @@
 #!/usr/bin/python3
+"""Function"""
+
+
 class square:
-    def __init__(self):
+    """class Square that defines a square:"""
+
+
+pass
