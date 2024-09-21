@@ -10,4 +10,3 @@ class Square:
         elif isinstance(size, int):
             raise TypeError("size must be an integer")
         self.__size = size
-
