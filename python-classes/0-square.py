@@ -2,6 +2,6 @@
 """Function"""
 
 
-class square:
+class Square:
     """class Square that defines a square:"""
     pass
