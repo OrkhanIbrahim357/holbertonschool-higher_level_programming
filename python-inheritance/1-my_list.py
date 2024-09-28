@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Module containing print_sorted func"""
 
+
 class MyList(list):
     """Class inherited from list class"""
 
@@ -8,4 +9,3 @@ class MyList(list):
         """Method to print sorted list"""
         new_list = sorted(self)
         print(new_list)
-        
