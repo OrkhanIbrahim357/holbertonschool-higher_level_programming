@@ -1,3 +1,2 @@
--- rows
-SELECT *
-FROM first_tables;
+-- listing all
+SELECT * FROM first_tables;
