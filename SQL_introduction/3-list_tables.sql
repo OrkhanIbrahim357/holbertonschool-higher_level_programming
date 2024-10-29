@@ -1,2 +1,2 @@
---sql
+-- list
 SHOW TABLES;
