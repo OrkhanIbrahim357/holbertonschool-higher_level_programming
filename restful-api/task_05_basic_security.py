@@ -61,12 +61,7 @@ def jwt_protected():
 
 @app.route('/admin-only')
 @jwt_required()
-def admin_only():
-    current_user = get_jwt_identity()
-    if current_user['role'] != 'admin':
-        return jsonify({"error": "Admin access required"}), 403
-    return "Admin Access: Granted"
-
+def admin_only():apt install python3.11-venv
 
 @jwt.unauthorized_loader
 def handle_unauthorized_error(err):
