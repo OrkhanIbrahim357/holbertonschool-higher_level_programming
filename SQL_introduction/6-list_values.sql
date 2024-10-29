@@ -1,2 +1,3 @@
 -- rows
-SELECT * FROM first_tables;
+SELECT *
+FROM first_tables;
