@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-"""Module for fetching all states containing letter 'a'."""
+"""
+Module for fetching all states containing letter 'a'.
+"""
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sys import argv
@@ -20,11 +22,16 @@ if __name__ == "__main__":
     Session = sessionmaker(bind=engine)
     session = Session()
 
+    # The Query
+    state = (session.query(State)
+             .filter(State.name == argv[4])
+             .first())
+
     # Printing the result
-    for state in (session.query(State)
-                  .filter(State.name.like('%a%'))
-                  .order_by(State.id)):
-        print("{}: {}".format(state.id, state.name))
+    if state is None:
+        print("Not found")
+    else:
+        print(state.id)
 
     # Closing the session
     if session:
