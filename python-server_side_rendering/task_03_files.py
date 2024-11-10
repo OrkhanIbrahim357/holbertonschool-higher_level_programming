@@ -1,65 +1,71 @@
-from flask import Flask, render_template, request
-import os
+from flask import Flask, render_template, request, jsonify
 import json
 import csv
+from os import error
 
 app = Flask(__name__)
+
+def read_json_data(file_path):
+    with open(file_path, 'r') as file:
+        data = json.load(file)
+    return data
+
+def read_csv_data(file_path):
+    data = []
+    with open(file_path, 'r') as file:
+        csv_reader = csv.DictReader(file)
+        for row in csv_reader:
+            row['id'] = int(row['id'])
+            row['price'] = float(row['price'])
+            data.append(row)
+    return data
+
+def filter_data_by_id(data, product_id):
+    return [product for product in data if product['id'] == product_id]
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
-
 @app.route('/about')
 def about():
     return render_template('about.html')
-
 
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
 
-def read_json(file_path):
-    with open(file_path) as file:
-        return json.load(file)
-    
-def read_csv(file_path):
-    products = []
-    with open(file_path) as file:
-        datas = csv.DictReader(file)
-        for data in datas:
-            data['id'] = int(data['id'])
-            data['price'] = float(data['price'])
-            products.append(data)
-    return products
+@app.route('/items')
+def items():
+    try:
+        with open('items.json', 'r', encoding="utf-8") as f:
+            data = json.load(f)
+            items = data.get('items', [])
+    except FileNotFoundError:
+        items = []
+    return render_template('items.html', items=items)
 
 @app.route('/products')
 def products():
     source = request.args.get('source')
     product_id = request.args.get('id')
-    file_path = ''
-
+    data = []
+    error_message = None
+    
     if source == 'json':
-        file_path = 'products.json'
+        data = read_json_data('products.json')
     elif source == 'csv':
-        file_path = 'products.csv'
+        data = read_csv_data('products.csv')
     else:
-        return render_template('product_display.html', error = 'Wrong source')
+        error_message = "Wrong source"
+        return render_template('product_display.html', error=error_message)
     
-    if not os.path.exists(file_path):
-        return render_template('product_display.html', error = 'File not exists')
+    if not error_message and product_id:
+        data = filter_data_by_id(data, int(product_id))
+    if not data:
+        error_message = "Product not found"
     
-    if source == 'json':
-        products = read_json(file_path)
-    else:
-        products = read_csv(file_path)
-    
-    if product_id:
-        product_id = int(product_id)
-        products = [p for p in products if p['id'] == product_id]
-        if not products:
-            return render_template('product_display.html', error='Product not found')
-    return render_template('product_display.html', products=products)
-    
+    return render_template('product_display.html', products=data, error=error_message)
+ 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
